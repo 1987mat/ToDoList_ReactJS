@@ -103,30 +103,51 @@ class App extends Component {
     const { task, taskArr, completed } = this.state;
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="user-input">Enter Task </label>
-          <input
-            onChange={(e) => this.handleChange(e)}
-            id="user-input"
-            type="text"
-            value={task.text}
-          ></input>
-          <button type="submit">Add Task</button>
-        </form>
-        <Overview
-          tasks={taskArr}
-          editing={this.editing}
-          removeTask={this.removeTask}
-          editTask={this.editTask}
-          handleEditChange={this.handleEditChange}
-          handleSubmit={this.handleSubmit}
-          addTask={this.addTask}
-          editText={this.state.editText}
-          taskToEditID={this.state.taskToEdit}
-          submitEdits={this.submitEdits}
-          toggleComplete={this.toggleComplete}
-          completed={completed}
-        />
+        <h1 className="display-1 text-center  mt-4 mb-5">ToDoList</h1>
+        <div className="bg-light mx-auto p-4 d-flex flex-md-column justify-content-start mt-4 card w-50">
+          <form
+            onSubmit={this.handleSubmit}
+            className="card-body d-flex form-controls"
+          >
+            <input
+              onChange={(e) => this.handleChange(e)}
+              id="user-input"
+              type="text"
+              value={task.text}
+              placeholder="Enter Task..."
+              className="mr-2 form-control form-control-lg"
+            ></input>
+            <button className="btn btn-primary btn-lg" type="submit">
+              Add Task
+            </button>
+          </form>
+          <Overview
+            className="d-flex flex-column"
+            tasks={taskArr}
+            editing={this.editing}
+            removeTask={this.removeTask}
+            editTask={this.editTask}
+            handleEditChange={this.handleEditChange}
+            handleSubmit={this.handleSubmit}
+            addTask={this.addTask}
+            editText={this.state.editText}
+            taskToEditID={this.state.taskToEdit}
+            submitEdits={this.submitEdits}
+            toggleComplete={this.toggleComplete}
+            completed={completed}
+          />
+        </div>
+        <footer className="fixed-bottom text-center mb-1">
+          Developed by Mat
+          <a
+            className="text-reset ml-1 mt-1"
+            href="https://github.com/1987mat"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <ion-icon name="logo-github"></ion-icon>
+          </a>
+        </footer>
       </div>
     );
   }
