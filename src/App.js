@@ -27,24 +27,36 @@ class App extends Component {
   };
 
   handleSubmit = (e) => {
+    const { taskArr, task } = this.state;
+
     e.preventDefault();
 
-    if (document.getElementById('user-input').value !== '') {
+    if (document.getElementById('user-input').value === '') {
+      return;
+    } else {
+      taskArr.push(task);
       this.setState({
-        taskArr: this.state.taskArr.concat(this.state.task),
+        taskArr: taskArr,
         task: { text: '', id: uniqid() },
       });
-    } else {
-      return;
     }
+
+    localStorage.setItem('tasks', JSON.stringify(taskArr));
   };
 
   removeTask = (id) => {
     const { taskArr } = this.state;
-    taskArr.splice(id, 1);
+    taskArr.forEach((task, index) => {
+      if (task.id === id) {
+        taskArr.splice(index, 1);
+      }
+    });
+
     this.setState({
       taskArr: taskArr,
     });
+
+    localStorage.setItem('tasks', JSON.stringify(this.state.taskArr));
   };
 
   toggleComplete = (id, e) => {
@@ -57,7 +69,7 @@ class App extends Component {
         });
 
         // Apply styling if task is completed
-        const completedTask = e.target.previousElementSibling.firstElementChild;
+        const completedTask = e.target.parentElement.previousElementSibling;
         e.target.checked
           ? completedTask.classList.add('completed')
           : completedTask.classList.remove('completed');
@@ -97,16 +109,18 @@ class App extends Component {
       editText: '',
       taskToEdit: '',
     });
+
+    localStorage.setItem('tasks', JSON.stringify(taskArr));
   };
 
   render() {
     const { task, taskArr, completed } = this.state;
     return (
-      <div>
-        <h1 className="display-1 text-center  mt-4 mb-5">ToDoList</h1>
-        <div className="bg-light mx-auto p-4 d-flex flex-md-column justify-content-start mt-4 card w-50">
+      <div className="container p-5">
+        <h1 className="display-1 text-center mt-4 mb-5">ToDoList</h1>
+        <div className="mx-auto p-4 d-flex flex-md-column justify-content-start mt-4 card w-75 shadow-lg p-3 mb-5 bg-transparent rounded">
           <form
-            onSubmit={this.handleSubmit}
+            onSubmit={(e) => this.handleSubmit(e)}
             className="card-body d-flex form-controls"
           >
             <input
@@ -115,7 +129,8 @@ class App extends Component {
               type="text"
               value={task.text}
               placeholder="Enter Task..."
-              className="mr-2 form-control form-control-lg"
+              maxLength="15"
+              className="mr-2 form-control form-control-lg shadow bg-white rounded"
             ></input>
             <button className="btn btn-primary btn-lg" type="submit">
               Add Task
@@ -137,7 +152,7 @@ class App extends Component {
             completed={completed}
           />
         </div>
-        <footer className="fixed-bottom text-center mb-1">
+        <footer className="footer text-center fixed-bottom mb-1">
           Developed by Mat
           <a
             className="text-reset ml-1 mt-1"

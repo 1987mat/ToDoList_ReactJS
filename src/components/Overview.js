@@ -6,30 +6,35 @@ class Overview extends Component {
       <ul className="card-body mt-4">
         {this.props.tasks.map((item) => {
           return (
-            <div className="d-flex gap-2 p-2" key={item.id}>
+            <div
+              className="d-flex justify-content-between p-2 shadow bg-white rounded mb-3"
+              key={item.id}
+            >
               <li className="list-group">
                 {/* Show task name or input */}
                 {this.props.taskToEditID === item.id ? (
                   <input
                     onChange={(e) => this.props.handleEditChange(e)}
                     type="text"
-                    className="form-control-sm"
+                    className="form-control-sm no-border"
                     value={this.props.editText}
                   ></input>
                 ) : (
                   <div className="list-el col sm-8">{item.text}</div>
                 )}
               </li>
-              {this.props.taskToEditID !== item.id ? (
-                <input
-                  type="checkbox"
-                  onChange={(e) => this.props.toggleComplete(item.id, e)}
-                ></input>
-              ) : (
-                ''
-              )}
 
-              <div className="ml-5 float-right">
+              <div className="d-flex gap-1">
+                {this.props.taskToEditID !== item.id ? (
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    onChange={(e) => this.props.toggleComplete(item.id, e)}
+                  ></input>
+                ) : (
+                  ''
+                )}
+
                 {/* Show Edit or Confirm Button */}
                 {this.props.taskToEditID === item.id ? (
                   <ion-icon

@@ -7,6 +7,7 @@
 }
 
 body {
+  min-height: 100vh;
   background: rgb(195, 212, 242);
   background: radial-gradient(
     circle,
@@ -17,4 +18,39 @@ body {
 
 .completed {
   text-decoration: line-through;
+}
+
+ion-icon {
+  color: #181818;
+}
+
+ion-icon:hover {
+  cursor: pointer;
+}
+
+ion-icon:active {
+  transform: translateY(4px);
+}
+
+footer {
+  z-index: -2 !important;
+}
+
+/*MEDIA QUERIES*/
+@media only screen and (min-width: 320px) {
+  html {
+    font-size: 50%;
+  }
+}
+
+@media only screen and (min-width: 576px) {
+  html {
+    font-size: 70%;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  html {
+    font-size: 90%;
+  }
 }
