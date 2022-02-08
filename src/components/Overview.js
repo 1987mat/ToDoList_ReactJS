@@ -16,7 +16,7 @@ class Overview extends Component {
                   <input
                     onChange={(e) => this.props.handleEditChange(e)}
                     type="text"
-                    className="form-control-sm no-border"
+                    className="pl-1"
                     value={this.props.editText}
                   ></input>
                 ) : (
@@ -29,12 +29,12 @@ class Overview extends Component {
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    onChange={(e) => this.props.toggleComplete(item.id, e)}
+                    onChange={() => this.props.toggleComplete(item.id)}
+                    checked={item.completed ? true : false}
                   ></input>
                 ) : (
                   ''
                 )}
-
                 {/* Show Edit or Confirm Button */}
                 {this.props.taskToEditID === item.id ? (
                   <ion-icon

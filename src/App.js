@@ -12,24 +12,61 @@ class App extends Component {
       task: {
         text: '',
         id: uniqid(),
+        completed: false,
       },
       editing: false,
       editText: '',
       taskToEdit: '',
-      completed: false,
     };
   }
 
+  // Get tasks from Local Storage on page load
+  componentDidMount = () => {
+    window.addEventListener('load', () => {
+      let localStorageData = JSON.parse(localStorage.getItem('tasks'));
+
+      if (localStorageData !== null) {
+        localStorageData.forEach((task) => {
+          if (task.completed) {
+            this.setState({
+              taskArr: localStorageData,
+              task: {
+                text: '',
+                id: this.state.task.id,
+                completed: task.completed,
+              },
+            });
+            document
+              .querySelectorAll('.list-el')
+              .forEach((el) => console.log(el));
+          } else {
+            this.setState({
+              taskArr: localStorageData,
+              task: {
+                text: '',
+                id: this.state.task.id,
+                completed: task.completed,
+              },
+            });
+          }
+        });
+      }
+    });
+  };
+
   handleChange = (e) => {
     this.setState({
-      task: { text: e.target.value, id: this.state.task.id },
+      task: {
+        text: e.target.value,
+        id: this.state.task.id,
+        completed: this.state.task.completed,
+      },
     });
   };
 
   handleSubmit = (e) => {
-    const { taskArr, task } = this.state;
-
     e.preventDefault();
+    const { taskArr, task } = this.state;
 
     if (document.getElementById('user-input').value === '') {
       return;
@@ -37,11 +74,17 @@ class App extends Component {
       taskArr.push(task);
       this.setState({
         taskArr: taskArr,
-        task: { text: '', id: uniqid() },
+        task: {
+          text: '',
+          id: uniqid(),
+          completed: false,
+        },
       });
     }
 
-    localStorage.setItem('tasks', JSON.stringify(taskArr));
+    // Local Storage
+    const temp = JSON.stringify(taskArr);
+    localStorage.setItem('tasks', temp);
   };
 
   removeTask = (id) => {
@@ -53,28 +96,40 @@ class App extends Component {
     });
 
     this.setState({
-      taskArr: taskArr,
+      task: {
+        text: '',
+        id: this.state.task.id,
+      },
     });
 
-    localStorage.setItem('tasks', JSON.stringify(this.state.taskArr));
+    // Local Storage
+    const temp = JSON.stringify(taskArr);
+    localStorage.setItem('tasks', temp);
   };
 
-  toggleComplete = (id, e) => {
-    const { taskArr, completed } = this.state;
+  toggleComplete = (id) => {
+    const { taskArr } = this.state;
 
-    taskArr.forEach((task) => {
+    // Toggle checkbox checked value
+    const updatedTasks = taskArr.map((task) => {
       if (task.id === id) {
-        this.setState({
-          completed: !completed,
-        });
-
-        // Apply styling if task is completed
-        const completedTask = e.target.parentElement.previousElementSibling;
-        e.target.checked
-          ? completedTask.classList.add('completed')
-          : completedTask.classList.remove('completed');
+        task.completed = !task.completed;
       }
+      return task;
     });
+
+    this.setState({
+      taskArr: updatedTasks,
+      task: {
+        text: '',
+        id: this.state.task.id,
+        completed: !this.state.task.completed,
+      },
+    });
+
+    // Local Storage
+    const temp = JSON.stringify(taskArr);
+    localStorage.setItem('tasks', temp);
   };
 
   editTask = (id) => {
@@ -104,17 +159,23 @@ class App extends Component {
 
     this.setState({
       taskArr: taskArr,
-      task: { text: '', id: this.state.task.id },
+      task: {
+        text: '',
+        id: this.state.task.id,
+        completed: this.state.task.completed,
+      },
       editing: false,
       editText: '',
       taskToEdit: '',
     });
 
-    localStorage.setItem('tasks', JSON.stringify(taskArr));
+    // Local Storage
+    const temp = JSON.stringify(taskArr);
+    localStorage.setItem('tasks', temp);
   };
 
   render() {
-    const { task, taskArr, completed } = this.state;
+    const { task, taskArr } = this.state;
     return (
       <div className="container p-5">
         <h1 className="display-1 text-center mt-4 mb-5">ToDoList</h1>
@@ -128,7 +189,7 @@ class App extends Component {
               id="user-input"
               type="text"
               value={task.text}
-              placeholder="Enter Task..."
+              placeholder="Enter Task"
               maxLength="15"
               className="mr-2 form-control form-control-lg shadow bg-white rounded"
             ></input>
@@ -139,7 +200,6 @@ class App extends Component {
           <Overview
             className="d-flex flex-column"
             tasks={taskArr}
-            editing={this.editing}
             removeTask={this.removeTask}
             editTask={this.editTask}
             handleEditChange={this.handleEditChange}
@@ -149,7 +209,7 @@ class App extends Component {
             taskToEditID={this.state.taskToEdit}
             submitEdits={this.submitEdits}
             toggleComplete={this.toggleComplete}
-            completed={completed}
+            isCompleted={this.state.task.completed}
           />
         </div>
         <footer className="footer text-center fixed-bottom mb-1">
