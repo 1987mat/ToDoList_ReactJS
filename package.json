@@ -2,7 +2,7 @@
   "name": "task-app",
   "version": "0.1.0",
   "private": false,
-  "homepage": "http://1987mat.github.io/ToDoList_ReactJS",
+  "homepage": "https://1987mat.github.io/ToDoList_ReactJS",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",

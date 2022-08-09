@@ -179,7 +179,7 @@ class App extends Component {
     return (
       <div className="container p-5">
         <h1 className="display-1 text-center mt-4 mb-5">ToDoList</h1>
-        <div className="mx-auto p-4 d-flex flex-md-column justify-content-start mt-4 card w-75 shadow-lg p-3 mb-5 bg-transparent rounded">
+        <div className="mx-auto p-4 d-flex flex-md-column justify-content-start mt-4 card w-75 border-0 p-3 mb-5 bg-transparent rounded">
           <form
             onSubmit={(e) => this.handleSubmit(e)}
             className="card-body d-flex form-controls"
@@ -191,6 +191,7 @@ class App extends Component {
               value={task.text}
               placeholder="Enter Task"
               maxLength="15"
+              autoFocus
               className="mr-2 form-control form-control-lg shadow bg-white rounded"
             ></input>
             <button className="btn btn-primary btn-lg" type="submit">
@@ -212,10 +213,10 @@ class App extends Component {
             isCompleted={this.state.task.completed}
           />
         </div>
-        <footer className="footer text-center fixed-bottom mb-1">
+        <footer className="footer text-center fixed-bottom mb-2 font-weight-bold">
           Developed by Mat
           <a
-            className="text-reset ml-1 mt-1"
+            className="text-reset ml-1"
             href="https://github.com/1987mat"
             target="_blank"
             rel="noreferrer"

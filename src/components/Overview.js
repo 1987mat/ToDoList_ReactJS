@@ -24,10 +24,10 @@ class Overview extends Component {
                 )}
               </li>
 
-              <div className="d-flex gap-1">
+              <div>
                 {this.props.taskToEditID !== item.id ? (
                   <input
-                    className="form-check-input"
+                    className="form-check-input check"
                     type="checkbox"
                     onChange={() => this.props.toggleComplete(item.id)}
                     checked={item.completed ? true : false}
