@@ -47,6 +47,7 @@ For running the server file on you can use this command.
 - Webpack
 - HTML
 - CSS
+- Local Storage
 
 ## Author
 
