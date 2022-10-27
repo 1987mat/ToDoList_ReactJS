@@ -1,6 +1,6 @@
 # ToDoList React App
 
-<p>To do list crud app created with React JS class components and lifecycles.</p>
+<p>To do list crud app created with React class components, lifecycles and local storage.</p>
 
 ## Links
 
@@ -41,20 +41,17 @@ For running the server file on you can use this command.
 
 ## Built With
 
-- React JS
-- Node
-- NPM
-- Webpack
 - HTML
 - CSS
-- Local Storage
+- React JS
+- Webpack
 
 ## Author
 
 **Matteo Calvani**
 
 - [Profile](https://github.com/1987mat 'Matteo Calvani')
-- [Website](https://1987mat.github.io/Portfolio_Site)
+- [Website](https://1987mat.github.io/Portfolio_Site, 'Welcome')
 
 ## 🤝 Support
 
