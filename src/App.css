@@ -1,66 +1,221 @@
-@import url('https://fonts.googleapis.com/css2?family=Encode+Sans:wght@400;700&display=swap');
+@import url('https://fonts.cdnfonts.com/css/jetbrains-mono-2');
 
 * {
   box-sizing: border-box;
-  font-family: 'Encode Sans', sans-serif;
-  color: #181818;
+  font-family: 'JetBrains Mono', sans-serif;
+  font-family: 'JetBrains Mono NL', sans-serif;
+  color: #282828;
 }
 
 body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #000836 !important;
   min-height: 100vh;
-  background: rgb(195, 212, 242);
-  background: radial-gradient(
-    circle,
-    rgba(195, 212, 242, 1) 3%,
-    rgba(14, 47, 88, 1) 100%
-  );
+  margin: 0;
+  padding: 0;
 }
 
-.completed {
-  text-decoration: line-through;
+h1 {
+  color: lightblue;
 }
 
-ion-icon {
-  color: #181818;
-  transition: transform 0.2s ease-in;
+.subheading {
+  color: whitesmoke;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8em;
 }
 
-ion-icon:hover {
+.subheading i {
+  color: whitesmoke;
+  font-size: 1.5rem;
+}
+
+.field-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.field-wrapper .bi-pen-fill {
+  position: absolute;
+  left: 0.8rem;
+  top: 0.75rem;
+  color: gray;
+}
+
+.field-wrapper input {
+  padding-left: 2.25rem;
+}
+
+.field-wrapper .add-task-icon {
+  position: absolute;
+  right: 0.8rem;
+  top: 0.3rem;
+  font-size: 1.5rem;
+  color: black;
+  transform: scale(1);
+  transition: transform 0.4s ease;
+}
+
+.field-wrapper .add-task-icon:hover,
+.task-wrapper i:hover {
   cursor: pointer;
   transform: scale(1.1);
 }
 
-ion-icon:active {
-  transform: translateY(4px);
+.task-wrapper {
+  background-color: white !important;
+  position: relative;
+  align-items: center;
 }
 
-/*MEDIA QUERIES*/
-@media only screen and (min-width: 320px) {
-  html {
-    font-size: 50%;
+@keyframes scale {
+  25% {
+    transform: scale(1);
+  }
+
+  75% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }
 
-@media only screen and (min-width: 576px) {
+.task-wrapper.edited {
+  -webkit-animation: scale 2s ease-in-out;
+  animation: scale 1s;
+}
+
+.task-wrapper.completed {
+  background-color: #4b0082 !important;
+}
+
+.task-wrapper.completed::after {
+  content: '';
+  width: 85%;
+  height: 1px;
+  background-color: white;
+  position: absolute;
+  left: 2.5rem;
+}
+
+.task-wrapper .check {
+  position: absolute;
+  left: 2rem;
+  top: 0.5rem;
+}
+
+.task-wrapper .check:hover {
+  cursor: pointer;
+}
+
+.task-wrapper .list-el {
+  margin-left: 1rem;
+}
+
+.task-wrapper .edit-delete-wrapper {
+  display: flex;
+  gap: 0.5em;
+}
+
+.task-wrapper .edit-input {
+  box-shadow: 0 0 8px gray;
+  border-radius: 4px;
+  border: none;
+  padding: 2px;
+}
+
+.task-wrapper i {
+  transform: scale(1);
+  transition: transform 0.4s ease;
+}
+
+/* CSS Transitions */
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.fade-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.fade-exit-active {
+  transform: translateX(-200%);
+  opacity: 0;
+  transition: transform 1s ease, opacity 0.6s ease;
+}
+
+footer {
+  display: flex;
+  gap: 0.2em;
+  justify-content: center;
+  position: fixed;
+  bottom: 0;
+}
+
+footer span,
+footer i {
+  color: whitesmoke;
+}
+
+footer .author {
+  color: lightblue;
+}
+
+/* RESPONSIVE */
+@media only screen and (min-width: 320px) {
   html {
-    font-size: 70%;
+    font-size: 80%;
+  }
+
+  .container {
+    height: 100vh;
+    margin: 0.5em;
+    padding: 4em;
+  }
+
+  .wrapper {
+    display: flex;
+    margin-top: 2em;
+    width: 90%;
+  }
+
+  .subheading {
+    flex-direction: column;
   }
 }
 
 @media only screen and (min-width: 768px) {
   html {
-    font-size: 80%;
+    font-size: 90%;
+  }
+
+  .container {
+    margin: 0;
+  }
+
+  .subheading {
+    flex-direction: initial;
   }
 }
 
 @media only screen and (min-width: 992px) {
   html {
-    font-size: 95%;
-  }
-}
-
-@media only screen and (min-width: 1200px) {
-  html {
     font-size: 100%;
+  }
+
+  .wrapper {
+    width: 70%;
   }
 }

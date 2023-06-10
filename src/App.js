@@ -6,6 +6,7 @@ import uniqid from 'uniqid';
 class App extends Component {
   constructor(props) {
     super(props);
+    this.textInput = React.createRef();
 
     this.state = {
       taskArr: [],
@@ -13,6 +14,7 @@ class App extends Component {
         text: '',
         id: uniqid(),
         completed: false,
+        edited: false,
       },
       editing: false,
       editText: '',
@@ -34,6 +36,7 @@ class App extends Component {
                 text: '',
                 id: this.state.task.id,
                 completed: task.completed,
+                edited: task.edited,
               },
             });
             document
@@ -46,6 +49,7 @@ class App extends Component {
                 text: '',
                 id: this.state.task.id,
                 completed: task.completed,
+                edited: task.edited,
               },
             });
           }
@@ -60,6 +64,7 @@ class App extends Component {
         text: e.target.value,
         id: this.state.task.id,
         completed: this.state.task.completed,
+        edited: this.state.task.edited,
       },
     });
   };
@@ -78,6 +83,7 @@ class App extends Component {
           text: '',
           id: uniqid(),
           completed: false,
+          edited: false,
         },
       });
     }
@@ -85,6 +91,8 @@ class App extends Component {
     // Local Storage
     const temp = JSON.stringify(taskArr);
     localStorage.setItem('tasks', temp);
+
+    this.textInput.current.focus();
   };
 
   removeTask = (id) => {
@@ -124,6 +132,7 @@ class App extends Component {
         text: '',
         id: this.state.task.id,
         completed: !this.state.task.completed,
+        edited: this.state.task.edited,
       },
     });
 
@@ -132,15 +141,25 @@ class App extends Component {
     localStorage.setItem('tasks', temp);
   };
 
-  editTask = (id) => {
-    const { taskArr } = this.state;
-    const selectedItem = taskArr.find((task) => task.id === id);
+  editTask = (id, e) => {
+    if (
+      !e.currentTarget.closest('.task-wrapper').classList.contains('completed')
+    ) {
+      const { taskArr } = this.state;
+      const selectedItem = taskArr.find((task) => task.id === id);
 
-    this.setState({
-      editing: true,
-      editText: selectedItem.text,
-      taskToEdit: selectedItem.id,
-    });
+      this.setState({
+        task: {
+          text: '',
+          id: this.state.task.id,
+          completed: this.state.task.completed,
+          edited: false,
+        },
+        editing: true,
+        editText: selectedItem.text,
+        taskToEdit: selectedItem.id,
+      });
+    }
   };
 
   handleEditChange = (e) => {
@@ -152,8 +171,12 @@ class App extends Component {
   submitEdits = (id) => {
     const { taskArr, editText } = this.state;
     taskArr.forEach((el) => {
-      if (el.id === id) {
+      if (el.id === id && editText !== el.text && editText !== '') {
         el.text = editText;
+        el.edited = true;
+        setTimeout(() => {
+          el.edited = false;
+        }, 500);
       }
     });
 
@@ -177,26 +200,32 @@ class App extends Component {
   render() {
     const { task, taskArr } = this.state;
     return (
-      <div className="container p-5">
-        <h1 className="display-1 text-center mt-4 mb-5">ToDoList</h1>
-        <div className="mx-auto p-4 d-flex flex-md-column justify-content-start mt-4 card w-75 border-0 p-3 mb-5 bg-transparent rounded">
-          <form
-            onSubmit={(e) => this.handleSubmit(e)}
-            className="card-body d-flex form-controls"
-          >
-            <input
-              onChange={(e) => this.handleChange(e)}
-              id="user-input"
-              type="text"
-              value={task.text}
-              placeholder="Enter Task"
-              maxLength="15"
-              autoFocus
-              className="mr-2 form-control form-control-lg shadow bg-white rounded"
-            ></input>
-            <button className="btn btn-primary btn-lg" type="submit">
-              Add Task
-            </button>
+      <div className="container">
+        <h1 className="display-1 text-center mt-4 mb-5">To-Do List</h1>
+        <p className="text-center subheading">
+          Create, modify and organize your checklist
+          <i className="bi bi-calendar2-check"></i>
+        </p>
+        <div className="wrapper mx-auto d-flex flex-md-column justify-content-center card border-0 bg-transparent rounded">
+          <form className="card-body d-flex form-controls">
+            <div className="field-wrapper">
+              <i className="bi bi-pen-fill"></i>
+              <input
+                onChange={(e) => this.handleChange(e)}
+                id="user-input"
+                type="text"
+                value={task.text}
+                placeholder="Add Task..."
+                maxLength="15"
+                autoFocus
+                className="mr-2 form-control form-control-lg shadow bg-white rounded"
+                ref={this.textInput}
+              ></input>
+              <i
+                className="bi bi-plus-lg add-task-icon"
+                onClick={(e) => this.handleSubmit(e)}
+              ></i>
+            </div>
           </form>
           <Overview
             className="d-flex flex-column"
@@ -214,14 +243,16 @@ class App extends Component {
           />
         </div>
         <footer className="footer text-center fixed-bottom mb-2 font-weight-bold">
-          Developed by Mat
+          <span>
+            Developed by <span className="author">Mat</span>
+          </span>
           <a
             className="text-reset ml-1"
             href="https://github.com/1987mat"
             target="_blank"
             rel="noreferrer"
           >
-            <ion-icon name="logo-github"></ion-icon>
+            <i className="bi bi-github"></i>
           </a>
         </footer>
       </div>
