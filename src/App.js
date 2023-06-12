@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
-import Overview from './components/Overview';
+import List from './components/List';
 import './App.css';
 import uniqid from 'uniqid';
 
 class App extends Component {
   constructor(props) {
     super(props);
+
+    // DOM refs
     this.textInput = React.createRef();
+    this.heading = React.createRef();
+    this.subheading = React.createRef();
+    this.wrapper = React.createRef();
+    this.dragItem = React.createRef();
+    this.dragOverItem = React.createRef();
 
     this.state = {
       taskArr: [],
@@ -56,6 +63,23 @@ class App extends Component {
         });
       }
     });
+
+    // Fade in animation when page loads
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          entry.target.classList.toggle('fade-in', entry.isIntersecting);
+          if (entry.isIntersecting) observer.unobserve(entry.target);
+        });
+      },
+      {
+        treshold: 0.7,
+      }
+    );
+
+    observer.observe(this.heading.current);
+    observer.observe(this.subheading.current);
+    observer.observe(this.wrapper.current);
   };
 
   handleChange = (e) => {
@@ -104,10 +128,7 @@ class App extends Component {
     });
 
     this.setState({
-      task: {
-        text: '',
-        id: this.state.task.id,
-      },
+      taskArr: taskArr,
     });
 
     // Local Storage
@@ -197,16 +218,49 @@ class App extends Component {
     localStorage.setItem('tasks', temp);
   };
 
+  // // Drag & Drop
+  // dragStart = (position) => {
+  //   this.dragItem.current = position;
+  // };
+
+  // dragEnter = (position) => {
+  //   this.dragOverItem.current = position;
+  // };
+
+  // drop = () => {
+  //   console.log(this.state.taskArr);
+
+  //   const copyArray = [...this.state.taskArr];
+
+  //   const dragItemContent = copyArray[this.dragItem.current];
+  //   console.log(this.dragItem.current);
+
+  //   // copyArray.splice(dragItemContent, 1);
+  //   // copyArray.splice(this.dragOverItem.current, 0, dragItemContent);
+
+  //   this.dragItem.current = null;
+  //   this.dragOverItem.current = null;
+
+  //   // this.setState({
+  //   //   taskArr: copyArray,
+  //   // });
+  // };
+
   render() {
     const { task, taskArr } = this.state;
     return (
       <div className="container">
-        <h1 className="display-1 text-center mt-4 mb-5">To-Do List</h1>
-        <p className="text-center subheading">
+        <h1 ref={this.heading} className="display-1 text-center mt-4 mb-5">
+          To-Do List
+        </h1>
+        <p ref={this.subheading} className="text-center subheading">
           Create, modify and organize your checklist
           <i className="bi bi-calendar2-check"></i>
         </p>
-        <div className="wrapper mx-auto d-flex flex-md-column justify-content-center card border-0 bg-transparent rounded">
+        <div
+          ref={this.wrapper}
+          className="wrapper mx-auto d-flex flex-md-column justify-content-center card border-0 bg-transparent rounded"
+        >
           <form className="card-body d-flex form-controls">
             <div className="field-wrapper">
               <i className="bi bi-pen-fill"></i>
@@ -227,8 +281,9 @@ class App extends Component {
               ></i>
             </div>
           </form>
-          <Overview
+          <List
             className="d-flex flex-column"
+            state={this.state}
             tasks={taskArr}
             removeTask={this.removeTask}
             editTask={this.editTask}
@@ -240,6 +295,10 @@ class App extends Component {
             submitEdits={this.submitEdits}
             toggleComplete={this.toggleComplete}
             isCompleted={this.state.task.completed}
+            ref={this.dragItem}
+            dragStart={this.dragStart}
+            dragEnter={this.dragEnter}
+            drop={this.drop}
           />
         </div>
         <footer className="footer text-center fixed-bottom mb-2 font-weight-bold">
