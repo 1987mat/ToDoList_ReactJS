@@ -2,26 +2,17 @@ import React from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const List = React.forwardRef((props, ref) => {
-  console.log(props);
   return (
     <ul className="card-body mt-4">
       <TransitionGroup>
         {props.tasks.map((item, index) => (
-          <CSSTransition
-            draggable
-            onDragStart={(e) => props.dragStart(e, index)}
-            onDragEnter={(e) => props.dragEnter(e, index)}
-            onDragEnd={(e) => props.drop(e)}
-            key={item.id}
-            timeout={500}
-            classNames="fade"
-          >
+          <CSSTransition key={item.id} timeout={500} classNames="fade">
             <div
               className={`task-wrapper d-flex justify-content-between p-2 shadow rounded mb-3${
                 item.edited ? ' edited' : ''
               }${item.completed ? ' completed' : ''}`}
             >
-              {this.props.taskToEditID !== item.id ? (
+              {props.taskToEditID !== item.id ? (
                 <input
                   className="form-check-input check"
                   type="checkbox"
@@ -50,7 +41,7 @@ const List = React.forwardRef((props, ref) => {
                 {props.taskToEditID === item.id ? (
                   <i
                     className="bi bi-check-lg"
-                    onClick={() => props.submitEdits(item.id)}
+                    onClick={() => props.toggleEditMode(item.id)}
                   ></i>
                 ) : (
                   <i

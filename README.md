@@ -1,6 +1,6 @@
 # ToDoList React App
 
-<p>To do list crud app created with React class components, lifecycles and local storage.</p>
+<p>To-do list CRUD app built with React functional components, hooks, local storage, react-transition-group and drag&drop API.</p>
 
 ## Links
 

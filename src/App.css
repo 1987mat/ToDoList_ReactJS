@@ -8,13 +8,19 @@
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   background-color: #000836 !important;
-  min-height: 100vh;
   margin: 0;
   padding: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.content-wrapper {
+  margin-top: -3em;
 }
 
 h1 {
@@ -88,7 +94,7 @@ h1.fade-in {
 }
 
 .task-wrapper {
-  background-color: white !important;
+  background-color: whitesmoke !important;
   position: relative;
   align-items: center;
   transition: background-color 0.4s ease;
@@ -158,14 +164,15 @@ h1.fade-in {
 }
 
 /* CSS Transitions */
-
 .fade-enter {
+  transform: translateY(50%);
   opacity: 0;
 }
 
 .fade-enter-active {
+  transform: translateY(0);
   opacity: 1;
-  transition: opacity 0.4s ease;
+  transition: transform 0.6s ease, opacity 0.6s ease;
 }
 
 .fade-exit {
@@ -174,17 +181,15 @@ h1.fade-in {
 }
 
 .fade-exit-active {
-  transform: translateX(-200%);
+  transform: translateX(-100%);
   opacity: 0;
-  transition: transform 1s ease, opacity 0.6s ease;
+  transition: transform 0.6s ease, opacity 0.6s ease;
 }
 
 footer {
   display: flex;
   gap: 0.2em;
   justify-content: center;
-  position: fixed;
-  bottom: 0;
 }
 
 footer span,
