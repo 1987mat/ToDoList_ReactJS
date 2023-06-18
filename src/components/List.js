@@ -31,6 +31,8 @@ const List = React.forwardRef((props, ref) => {
                     className="pl-1 edit-input"
                     value={props.editText}
                     autoFocus
+                    ref={props.taskEditInputRef}
+                    id={item.id}
                   ></input>
                 ) : (
                   <div className="list-el col sm-8">{item.text}</div>
@@ -41,7 +43,7 @@ const List = React.forwardRef((props, ref) => {
                 {props.taskToEditID === item.id ? (
                   <i
                     className="bi bi-check-lg"
-                    onClick={() => props.toggleEditMode(item.id)}
+                    onClick={() => props.confirmEdits(item.id)}
                   ></i>
                 ) : (
                   <i

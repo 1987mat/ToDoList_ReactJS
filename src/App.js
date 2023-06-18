@@ -18,11 +18,12 @@ const App = () => {
     taskToEdit: '',
   });
 
-  // DOM refs
+  // Refs
   const textInput = useRef();
   const heading = useRef();
   const subheading = useRef();
   const wrapper = useRef();
+  const taskEditInput = useRef();
 
   // const dragItem = useRef();
   // const dragOverItem = useRef();
@@ -37,6 +38,10 @@ const App = () => {
 
       if (localStorageData !== null) {
         localStorageData.forEach((task) => {
+          if (task.edited) {
+            task.edited = false;
+          }
+
           setState({
             ...state,
             taskArr: localStorageData,
@@ -52,11 +57,64 @@ const App = () => {
     }
   });
 
-  // Toggle edit mode on click
+  // Keyboard events
   useEffect(() => {
-    if (state.editing) {
-      window.addEventListener('click', toggleEditMode);
-      return () => window.removeEventListener('click', toggleEditMode);
+    window.addEventListener('keydown', keyboardEvents);
+    return () => window.removeEventListener('keydown', keyboardEvents);
+
+    function keyboardEvents(e) {
+      if (e.key === 'Enter') {
+        // Add task
+        if (document.activeElement === textInput.current) {
+          e.preventDefault();
+          handleSubmit(e);
+        }
+
+        // Edit task
+        if (state.editing) {
+          let taskId = taskEditInput.current.id;
+          confirmEdits(taskId);
+        }
+      }
+
+      if (e.key === 'Escape' && state.editing) {
+        // Exit edit mode
+        setState({
+          ...state,
+          taskArr: state.taskArr,
+          task: {
+            text: '',
+            id: state.task.id,
+            completed: state.task.completed,
+          },
+          editing: false,
+          editText: '',
+          taskToEdit: '',
+        });
+      }
+    }
+  });
+
+  // Toggle edit mode when clicking outside
+  useEffect(() => {
+    window.addEventListener('click', toggleEditMode);
+    return () => window.removeEventListener('click', toggleEditMode);
+
+    function toggleEditMode(e) {
+      if (state.editing && !e.target.classList.contains('edit-input')) {
+        setState({
+          ...state,
+          taskArr: state.taskArr,
+          task: {
+            text: '',
+            id: state.task.id,
+            completed: state.task.completed,
+          },
+          editing: !state.editing,
+          editText: '',
+          taskToEdit: '',
+        });
+      }
     }
   });
 
@@ -189,14 +247,11 @@ const App = () => {
     });
   };
 
-  const toggleEditMode = (id) => {
+  const confirmEdits = (id) => {
     state.taskArr.forEach((el) => {
       if (el.id === id && state.editText !== el.text && state.editText !== '') {
         el.text = state.editText;
-        el.edited = true;
-        setTimeout(() => {
-          el.edited = false;
-        }, 500);
+        el.edited = !el.edited;
       }
     });
 
@@ -286,11 +341,12 @@ const App = () => {
             editTask={editTask}
             handleEditChange={handleEditChange}
             handleSubmit={handleSubmit}
-            toggleEditMode={toggleEditMode}
+            confirmEdits={confirmEdits}
             toggleComplete={toggleComplete}
             tasks={state.taskArr}
             editText={state.editText}
             taskToEditID={state.taskToEdit}
+            taskEditInputRef={taskEditInput}
             // ref={dragItem}
             // dragStart={dragStart}
             // dragEnter={dragEnter}
