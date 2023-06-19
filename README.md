@@ -10,7 +10,7 @@
 
 ## Screenshots
 
-<img src="https://github.com/1987mat/ToDoList_ReactJS/assets/64235918/a2e4dc2e-5729-4f82-9c39-2f1a96f34eae" width="400"/>
+<img src="https://github.com/1987mat/ToDoList_ReactJS/assets/64235918/d716f18d-b9ca-4939-a141-cb2fd230b769" width="400"/>
 
 ## Available Commands
 
