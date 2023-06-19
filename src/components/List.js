@@ -3,11 +3,15 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 const List = React.forwardRef((props, ref) => {
   return (
-    <ul className="card-body mt-4">
+    <ul className="card-body mt-4" ref={props.tasksList}>
       <TransitionGroup>
         {props.tasks.map((item, index) => (
           <CSSTransition key={item.id} timeout={500} classNames="fade">
             <div
+              draggable={props.draggable}
+              onDragStart={(e) => props.dragStart(e, index)}
+              onDragEnter={(e) => props.dragEnter(e, index)}
+              onDragEnd={props.dragEnd}
               className={`task-wrapper d-flex justify-content-between p-2 shadow rounded mb-3${
                 item.edited ? ' edited' : ''
               }${item.completed ? ' completed' : ''}`}
@@ -54,6 +58,10 @@ const List = React.forwardRef((props, ref) => {
                 <i
                   className="bi bi-trash3-fill"
                   onClick={() => props.removeTask(item.id)}
+                ></i>
+                <i
+                  className="bi bi-grip-horizontal"
+                  onMouseDown={(e) => props.dragMode(e)}
                 ></i>
               </div>
             </div>

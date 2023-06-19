@@ -20,7 +20,8 @@ body {
 }
 
 .content-wrapper {
-  margin-top: -3em;
+  width: 100%;
+  padding: 1em;
 }
 
 h1 {
@@ -163,6 +164,10 @@ h1.fade-in {
   transition: transform 0.4s ease;
 }
 
+.task-wrapper .bi-grip-horizontal:hover {
+  transform: scale(1);
+}
+
 /* CSS Transitions */
 .fade-enter {
   transform: translateY(50%);
@@ -213,6 +218,10 @@ footer .author {
     padding: 4em;
   }
 
+  .content-wrapper {
+    margin-top: 0;
+  }
+
   .wrapper {
     display: flex;
     margin-top: 2em;
@@ -226,7 +235,7 @@ footer .author {
 
 @media only screen and (min-width: 768px) {
   html {
-    font-size: 90%;
+    font-size: 100%;
   }
 
   .container {
@@ -239,8 +248,8 @@ footer .author {
 }
 
 @media only screen and (min-width: 992px) {
-  html {
-    font-size: 100%;
+  .content-wrapper {
+    margin-top: -3em;
   }
 
   .wrapper {

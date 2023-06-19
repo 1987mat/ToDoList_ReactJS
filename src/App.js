@@ -12,6 +12,7 @@ const App = () => {
       id: uniqid(),
       completed: false,
       edited: false,
+      draggable: false,
     },
     editing: false,
     editText: '',
@@ -23,10 +24,10 @@ const App = () => {
   const heading = useRef();
   const subheading = useRef();
   const wrapper = useRef();
+  const tasksList = useRef();
   const taskEditInput = useRef();
-
-  // const dragItem = useRef();
-  // const dragOverItem = useRef();
+  const dragItem = useRef();
+  const dragOverItem = useRef();
 
   // Get tasks from Local Storage on page load
   useEffect(() => {
@@ -49,7 +50,8 @@ const App = () => {
               text: '',
               id: state.task.id,
               completed: state.task.completed,
-              edited: state.task.edited,
+              edited: false,
+              draggable: state.task.draggable,
             },
           });
         });
@@ -80,12 +82,13 @@ const App = () => {
       if (e.key === 'Escape' && state.editing) {
         // Exit edit mode
         setState({
-          ...state,
           taskArr: state.taskArr,
           task: {
             text: '',
             id: state.task.id,
             completed: state.task.completed,
+            edited: state.task.edited,
+            draggable: state.task.draggable,
           },
           editing: false,
           editText: '',
@@ -103,12 +106,13 @@ const App = () => {
     function toggleEditMode(e) {
       if (state.editing && !e.target.classList.contains('edit-input')) {
         setState({
-          ...state,
           taskArr: state.taskArr,
           task: {
             text: '',
             id: state.task.id,
             completed: state.task.completed,
+            edited: state.task.edited,
+            draggable: state.task.draggable,
           },
           editing: !state.editing,
           editText: '',
@@ -146,6 +150,7 @@ const App = () => {
         id: state.task.id,
         completed: state.task.completed,
         edited: state.task.edited,
+        draggable: state.task.draggable,
       },
     });
   };
@@ -164,13 +169,12 @@ const App = () => {
           id: uniqid(),
           completed: false,
           edited: false,
+          draggable: state.task.draggable,
         },
       });
     }
 
-    // Local Storage
-    const temp = JSON.stringify(state.taskArr);
-    localStorage.setItem('tasks', temp);
+    setLocalStorage();
     textInput.current.value = '';
     textInput.current.focus();
   };
@@ -187,9 +191,7 @@ const App = () => {
       taskArr: state.taskArr,
     });
 
-    // Local Storage
-    const temp = JSON.stringify(state.taskArr);
-    localStorage.setItem('tasks', temp);
+    setLocalStorage();
     textInput.current.focus();
   };
 
@@ -210,12 +212,11 @@ const App = () => {
         id: state.task.id,
         completed: state.task.completed,
         edited: state.task.edited,
+        draggable: state.task.draggable,
       },
     });
 
-    // Local Storage
-    const temp = JSON.stringify(state.taskArr);
-    localStorage.setItem('tasks', temp);
+    setLocalStorage();
   };
 
   const editTask = (id, e) => {
@@ -232,6 +233,7 @@ const App = () => {
           id: state.task.id,
           completed: state.task.completed,
           edited: false,
+          draggable: state.task.draggable,
         },
         editing: true,
         editText: selectedItem.text,
@@ -262,44 +264,77 @@ const App = () => {
         text: '',
         id: state.task.id,
         completed: state.task.completed,
+        edited: state.task.edited,
+        draggable: state.task.draggable,
       },
       editing: false,
       editText: '',
       taskToEdit: '',
     });
 
-    // Local Storage
+    setLocalStorage();
+  };
+
+  // Drag & Drop
+  const dragMode = (e) => {
+    if (e.type === 'mousedown') {
+      e.target.closest('.task-wrapper').setAttribute('draggable', 'true');
+    }
+  };
+
+  const dragStart = (e, position) => {
+    dragItem.current = position;
+  };
+
+  const dragEnter = (e, position) => {
+    dragOverItem.current = position;
+  };
+
+  const dragEnd = () => {
+    const copyArray = [...state.taskArr];
+    const dragItemContent = copyArray[dragItem.current];
+
+    // Switch tasks position
+    copyArray.splice(dragItem.current, 1);
+    copyArray.splice(dragOverItem.current, 0, dragItemContent);
+    state.taskArr = copyArray;
+
+    tasksList.current.firstElementChild.childNodes.forEach((el, index) => {
+      if (dragItem.current === index) {
+        el.draggable = false;
+      }
+    });
+
+    dragItem.current = null;
+    dragOverItem.current = null;
+
+    state.taskArr.forEach((task) => {
+      if (task.edited) {
+        task.edited = false;
+      }
+    });
+
+    setState({
+      taskArr: state.taskArr,
+      task: {
+        text: '',
+        id: state.task.id,
+        completed: state.task.completed,
+        edited: false,
+        draggable: false,
+      },
+      editing: state.editing,
+      editText: '',
+      taskToEdit: '',
+    });
+
+    setLocalStorage();
+  };
+
+  const setLocalStorage = () => {
     const temp = JSON.stringify(state.taskArr);
     localStorage.setItem('tasks', temp);
   };
-
-  // // Drag & Drop
-  // dragStart = (position) => {
-  //   this.dragItem.current = position;
-  // };
-
-  // dragEnter = (position) => {
-  //   this.dragOverItem.current = position;
-  // };
-
-  // drop = () => {
-  //   console.log(this.state.taskArr);
-
-  //   const copyArray = [...this.state.taskArr];
-
-  //   const dragItemContent = copyArray[this.dragItem.current];
-  //   console.log(this.dragItem.current);
-
-  //   // copyArray.splice(dragItemContent, 1);
-  //   // copyArray.splice(this.dragOverItem.current, 0, dragItemContent);
-
-  //   this.dragItem.current = null;
-  //   this.dragOverItem.current = null;
-
-  //   // this.setState({
-  //   //   taskArr: copyArray,
-  //   // });
-  // };
 
   return (
     <div className="container">
@@ -347,10 +382,12 @@ const App = () => {
             editText={state.editText}
             taskToEditID={state.taskToEdit}
             taskEditInputRef={taskEditInput}
-            // ref={dragItem}
-            // dragStart={dragStart}
-            // dragEnter={dragEnter}
-            // drop={drop}
+            draggable={state.task.draggable}
+            tasksList={tasksList}
+            dragMode={dragMode}
+            dragStart={dragStart}
+            dragEnter={dragEnter}
+            dragEnd={dragEnd}
           />
         </div>
       </div>
