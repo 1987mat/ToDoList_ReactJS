@@ -60,7 +60,7 @@ const List = React.forwardRef((props, ref) => {
                   onClick={() => props.removeTask(item.id)}
                 ></i>
                 <i
-                  className="bi bi-grip-horizontal"
+                  className="bi bi-list"
                   onMouseDown={(e) => props.dragMode(e)}
                 ></i>
               </div>
