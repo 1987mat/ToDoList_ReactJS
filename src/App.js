@@ -275,7 +275,7 @@ const App = () => {
     setLocalStorage();
   };
 
-  // Drag & Drop
+  // Drag & Drop API
   const dragMode = (e) => {
     if (e.type === 'mousedown') {
       e.target.closest('.task-wrapper').setAttribute('draggable', 'true');
@@ -393,7 +393,7 @@ const App = () => {
       </div>
       <footer className="footer text-center fixed-bottom mb-2 font-weight-bold">
         <span>
-          Developed by <span className="author">Mat</span>
+          Developed by <span className="author">Matt</span>
         </span>
         <a
           className="text-reset ml-1"
