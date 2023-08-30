@@ -98,7 +98,7 @@ h1.fade-in {
 }
 
 .task-wrapper {
-  background-color: whitesmoke !important;
+  background-color: hsl(231, 63%, 88%);
   position: relative;
   align-items: center;
   transition: background-color 0.4s ease;
@@ -148,6 +148,7 @@ h1.fade-in {
 
 .task-wrapper .list-el {
   margin-left: 1rem;
+  color: #505050;
 }
 
 .task-wrapper .edit-delete-wrapper {
@@ -168,6 +169,7 @@ h1.fade-in {
 .task-wrapper i {
   transform: scale(1);
   transition: transform 0.4s ease;
+  color: #505050;
 }
 
 .task-wrapper .bi-grip-horizontal:hover {
